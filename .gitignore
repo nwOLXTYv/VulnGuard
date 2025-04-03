@@ -173,5 +173,8 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+# Pipenv files
+Pipfile.lock
+
 # Other projects
 database/
