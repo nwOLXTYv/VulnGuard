@@ -4,7 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pandas = "*"
+re = "*"
+panda = "*"
+logging = "*"
+datetime = "*"
+fnmatch = "*"
 
 [dev-packages]
 
