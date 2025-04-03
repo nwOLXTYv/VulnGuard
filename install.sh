@@ -49,7 +49,7 @@ print_success "Pipenv package installed successfully."
 # Step 2: Install Python requirements
 print_info "Installing project's requirements..."
 # Attempt to install Python requirements
-(pipenv lock && pipenv sync) || { print_warning "Failed to install project's requirements. Please check the Pipfile and Pipfile.lock file and try again.\n See https://pipenv.pypa.io/en/latest/commands.html"; exit 1; }
+(pipenv upgrade && pipenv sync) || { print_warning "Failed to install project's requirements. Please check the Pipfile and Pipfile.lock file and try again.\n See https://pipenv.pypa.io/en/latest/commands.html"; exit 1; }
 
 
 # Step 3: Clone the cvelistV5 repository
