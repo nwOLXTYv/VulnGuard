@@ -177,4 +177,4 @@ cython_debug/
 Pipfile.lock
 
 # Other projects
-database/
+cvelistV5/
