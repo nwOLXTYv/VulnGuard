@@ -8,7 +8,7 @@ class Cve:
         self.logger = logger.PrettyLogger("Cve")
         self.id = name
         self.db_path = path
-        self.version = ""
+        self.last_update = ""
         self.description = ""
         self.code = ""
         self.__get_data()
@@ -16,9 +16,13 @@ class Cve:
     def __get_data(self):
         file = open(self.db_path, "r")
         data = json.load(file)
-        print(data)
-        self.version = data['cveMetadata']['dateUpdated']
-        print(self.version)
-        # Todo : error on the next line, idk why
-        self.description = data['containers']['cna']['descriptions']['value']
-        print(self.description)
+        self.last_update = data['cveMetadata']['dateUpdated']
+        self.description = data['containers']['cna']['descriptions'][0]['value']
+        self.pretty_print()
+
+    def pretty_print(self):
+        print(f"CVE id : {self.id}")
+        print(f"CVE database path : {self.db_path}")
+        print(f"CVE last updated : {self.last_update}")
+        print(f"CVE description : {self.description}")
+        print(f"Vulnerable code : \n {self.code}")
