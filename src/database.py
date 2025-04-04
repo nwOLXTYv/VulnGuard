@@ -1,4 +1,5 @@
 import re
+import time
 from tools import logger
 from fnmatch import fnmatch
 from os import (system, chdir, walk, path)
@@ -48,9 +49,12 @@ class Database:
         This method changes the directory to the database path and performs a git pull to update the database.
         """
         chdir(self.path)
-        system("git pull")
+        self.logger.logger.info("Database update ...")
+        start = time.process_time()
+        system("git pull 1> /dev/null")
         self.last_update = datetime.now()
-        self.logger.logger.info("Database updated.")
+        end = time.process_time()
+        self.logger.logger.info("Database update took %f seconds.", (end - start))
 
     def search(self, cve):
         """
@@ -74,3 +78,4 @@ class Database:
                     self.logger.logger.info("Found %s at %s", cve, cve_path)
                     return cve_path
         self.logger.logger.error("Could not find any %s.", cve)
+        exit(1)

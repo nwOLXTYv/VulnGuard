@@ -4,13 +4,10 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-re = "*"
-panda = "*"
-logging = "*"
 datetime = "*"
-fnmatch = "*"
+logging = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.13.*"
+python_version = "3.13.2"
