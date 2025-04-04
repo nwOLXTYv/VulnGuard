@@ -1,3 +1,8 @@
+"""
+@file Database.py
+@brief Contains all database function and classes related to cvelistV5 data
+"""
+
 import re
 import time
 from tools import logger
