@@ -26,7 +26,7 @@ class Database:
         @param delta: The time interval in minutes after which the database should be updated.
         """
         self.logger = PrettyLogger("Database")
-        self.path = "../cvelistV5/"
+        self.path = "./cvelistV5/"
         self.update_delta = delta
         self.last_update = None
         self.__update()
@@ -54,7 +54,6 @@ class Database:
 
         This method changes the directory to the database path and performs a git pull to update the database.
         """
-        chdir(self.path)
         self.logger.logger.info("Database update ...")
         start = time.process_time()
         system("git pull > /dev/null")
