@@ -32,30 +32,33 @@ function print_error {
 print_info "Check required packages..."
   # Check Git version
 git --version &> /dev/null || { print_error "Git is not installed. Please install it before retrying the installation.\nSee https://git-scm.com/downloads/linux"; exit 1; }
-  # Check Pip version
-pipx --version &> /dev/null || { print_error "Pipx is not install. Please install it before retrying the installation.\n See https://pipx.pypa.io/latest/installation/"; exit 1; }
+  # Check Python3 version
+python3 --version &> /dev/null || { print_error "Python3 is not installed. Please install it before retrying the installation."; exit 1; }
   # Print step 0 success
 print_success "All required packages are installed."
 
-
-# Step 1: Install Pipenv
-print_info "Install pipenv package..."
-  # Attempt to install pipenv package
-pipx install pipenv || { print_warning "Failed to install pipenv package.\n See https://docs.pipenv.org/install/"; exit 1; }
+# Step 1: Set up virtual environment
+print_info "Setting up virtual environment..."
+  # Create a virtual environment
+python3 -m venv .venv || { print_warning "Failed to create virtual environment."; exit 1; }
+  # Activate the virtual environment
+source .venv/bin/activate || { print_warning "Failed to activate virtual environment."; exit 1; }
+  # Upgrade pip
+python3 -m pip install --upgrade pip || { print_warning "Failed to upgrade pip."; exit 1; }
   # Print step 1 success
-print_success "Pipenv package installed successfully."
-
+print_success "Virtual environment set up successfully."
 
 # Step 2: Install Python requirements
 print_info "Installing project's requirements..."
-# Attempt to install Python requirements
-(pipenv upgrade && pipenv sync) || { print_warning "Failed to install project's requirements. Please check the Pipfile and Pipfile.lock file and try again.\n See https://pipenv.pypa.io/en/latest/commands.html"; exit 1; }
-
+  # Attempt to install Python requirements
+pip install -r requirements.txt || { print_warning "Failed to install project's requirements. Please check the requirements.txt file and try again."; exit 1; }
+  # Print step 2 success
+print_success "Project's requirements installed successfully."
 
 # Step 3: Clone the cvelistV5 repository
-print_info "Cloning of the official cve.org github repository..."
-# Attempt to clone the repository
+print_info "Cloning the official cve.org GitHub repository..."
+  # Attempt to clone the repository
 git clone https://github.com/CVEProject/cvelistV5.git || { print_warning "Failed to clone the repository. Please check the repository URL and your network connection.\n git clone https://github.com/CVEProject/cvelistV5.git"; exit 1; }
-# Print step 3 success
+  # Print step 3 success
 print_success "Repository cloned successfully."
 print_success "Installation and setup complete!"
