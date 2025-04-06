@@ -1,15 +1,16 @@
-import cve
-import database
+from src.cve import Cve
+from src.database import Database
 
-from logging import Logger
+from tools.logger import PrettyLogger
 
 
 def vulnguard(cve_name):
-    logger = Logger("Vulnguard")
-    db = database.Database()
+    logger = PrettyLogger("Vulnguard")
+    db = Database()
     path = db.search(cve_name)
-    vuln = cve.Cve(cve_name, path)
+    vuln = Cve(cve_name, path)
     print(vuln)
+    logger.logger.info("Analyse finished")
 
 
 if __name__ == '__main__':
