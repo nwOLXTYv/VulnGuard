@@ -1,3 +1,5 @@
 datetime==5.5; python_version >= '3.10'
 logging==0.4.9.6
-requests==2.32.3
+
+DateTime~=5.5
+ollama~=0.4.7
