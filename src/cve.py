@@ -41,8 +41,14 @@ class Cve:
         """
         file = open(self.db_path, "r")
         data = json.load(file)
-        self.last_update = data['cveMetadata']['dateUpdated']
-        self.description = data['containers']['cna']['descriptions'][0]['value']
+        try:
+            self.last_update = data['cveMetadata']['dateUpdated']
+            self.description = data['containers']['cna']['descriptions'][0]['value']
+            self.logger.logger.info("Successfully loaded CVE data from '{}'".format(self.db_path))
+        except Exception as e:
+            self.logger.logger.error("Failed to load CVE data from '{}'".format(self.db_path))
+            self.logger.logger.error(e)
+            exit(1)
         self.pretty_print()
 
     def pretty_print(self):
