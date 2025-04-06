@@ -5,7 +5,8 @@
 
 import re
 import sys
-from logging import Logger
+
+from tools.logger import PrettyLogger
 
 
 class GlobalChanges:
@@ -192,15 +193,16 @@ def parse(diff_filename):
     @param diff_filename The path to the diff file.
     @return A GlobalChanges object containing the parsed diff data.
     """
-    logger = Logger("Parsing")
+    logger = PrettyLogger("GlobalChanges")
     try:
         with open(diff_filename, 'r') as file:
             diff_content = file.read()
 
         global_changes = GlobalChanges()
         global_changes.parse_diff(diff_content)
+        logger.logger.info("Parsing complete.")
         return global_changes
 
     except FileNotFoundError:
-        logger.error("File '{}' not found".format(diff_filename))
+        logger.logger.error("File '{}' not found".format(diff_filename))
         sys.exit(1)

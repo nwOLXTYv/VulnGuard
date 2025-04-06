@@ -5,8 +5,9 @@
 
 import re
 import time
-from tools import logger
+
 from fnmatch import fnmatch
+from tools.logger import PrettyLogger
 from os import (system, chdir, walk, path)
 from datetime import (datetime, timedelta)
 
@@ -24,7 +25,7 @@ class Database:
 
         @param delta: The time interval in minutes after which the database should be updated.
         """
-        self.logger = logger.PrettyLogger("Database")
+        self.logger = PrettyLogger("Database")
         self.path = "../cvelistV5/"
         self.update_delta = delta
         self.last_update = None
@@ -56,7 +57,7 @@ class Database:
         chdir(self.path)
         self.logger.logger.info("Database update ...")
         start = time.process_time()
-        system("git pull 1> /dev/null")
+        system("git pull > /dev/null")
         self.last_update = datetime.now()
         end = time.process_time()
         self.logger.logger.info("Database update took %f seconds.", (end - start))

@@ -4,7 +4,7 @@
 """
 
 import json
-from tools import logger
+from tools.logger import PrettyLogger
 
 
 class Cve:
@@ -24,7 +24,7 @@ class Cve:
         @param name The ID of the CVE.
         @param path The file path to the CVE database.
         """
-        self.logger = logger.PrettyLogger("Cve")
+        self.logger = PrettyLogger("Cve")
         self.id = name
         self.db_path = path
         self.last_update = ""
