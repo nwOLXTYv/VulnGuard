@@ -48,7 +48,7 @@ cd votre-repo-git-folder
 Créez votre modèle :
 
 ```bash
-ollama create vulnerability_detector -f ./Modelfile
+ollama create Michel -f ./Modelfile
 ```
 
 ---
@@ -56,7 +56,7 @@ ollama create vulnerability_detector -f ./Modelfile
 ### 4. Utiliser le modèle personnalisé
 
 ```bash
-ollama run vulnerability_detector
+ollama run Michel
 ```
 
 > ❌ Quittez la session avec `/bye`
