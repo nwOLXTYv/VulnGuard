@@ -39,8 +39,8 @@ Quittez le prompt avec :
 ### 3. Cloner ce dépôt et créer le modèle personnalisé
 
 ```bash
-git clone https://votre-repo-git-url.git
-cd votre-repo-git-folder
+git clone git@github.com:nwOLXTYv/VulnGuard.git
+cd VulnGuard
 ```
 
 > Le fichier `Modelfile` est déjà présent dans ce dépôt.
@@ -109,14 +109,14 @@ Une fois le modèle téléchargé, **aucune connexion internet n’est requise**
 
 ## 📋 Commandes utiles
 
-| Description                      | Commande                                        |
-|----------------------------------|-------------------------------------------------|
+| Description                      | Commande                                         |
+|----------------------------------|--------------------------------------------------|
 | Installer Ollama                 | `curl -fsSL https://ollama.com/install.sh \| sh` |
-| Télécharger un modèle            | `ollama run deepseek-coder:6.7b`               |
-| Quitter le prompt                | `/bye`                                          |
-| Créer un modèle personnalisé     | `ollama create vulnerability_detector -f ./Modelfile` |
-| Lancer le modèle personnalisé    | `ollama run vulnerability_detector`            |
-| Voir les modèles installés       | `ollama list`                                   |
+| Télécharger un modèle            | `ollama run deepseek-coder:6.7b`                 |
+| Quitter le prompt                | `/bye`                                           |
+| Créer un modèle personnalisé     | `ollama create Michel -f ./Modelfile`            |
+| Lancer le modèle personnalisé    | `ollama run Michel`                              |
+| Voir les modèles installés       | `ollama list`                                    |
 
 ---
 
