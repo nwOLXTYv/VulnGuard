@@ -1,4 +1,4 @@
-# 🧠 Vulnerability Detector – LLM Powered by Ollama & DeepSeek
+# 🧠 Vulngard
 
 Ce projet repose sur **Ollama** et le modèle **deepseek-coder:6.7b** pour la détection de code vulnérable dans des projets OpenSource en se basant uniquement sur la description des CVE.
 
@@ -12,7 +12,7 @@ Ce projet repose sur **Ollama** et le modèle **deepseek-coder:6.7b** pour la d�
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
-Vérifiez l’installation :
+Vérifiez l'installation :
 
 ```bash
 ollama --version
@@ -23,15 +23,7 @@ ollama --version
 ### 2. Télécharger le modèle `deepseek-coder:6.7b`
 
 ```bash
-ollama run deepseek-coder:6.7b
-```
-
-> 📥 Cela déclenchera le téléchargement du modèle. Une fois terminé, vous serez dans le prompt interactif.
-
-Quittez le prompt avec :
-
-```bash
-/bye
+ollama pull deepseek-coder:6.7b
 ```
 
 ---
@@ -53,29 +45,38 @@ ollama create Michel -f ./Modelfile
 
 ---
 
-### 4. Utiliser le modèle personnalisé
+### 4. Installer les dépendances
 
 ```bash
-ollama run Michel
+pip install -r requirements.txt
 ```
-
-> ❌ Quittez la session avec `/bye`
 
 ---
 
-## 🔍 À propos du `Modelfile`
+## 🛠️ Utilisation du script VulnGuard
 
-Le `Modelfile` définit comment le modèle est construit. Il permet :
+VulnGuard est un outil d'analyse de vulnérabilités qui utilise les modèles Ollama pour évaluer les vulnérabilités de code. Voici comment l'utiliser :
 
-- De partir d’un modèle existant (`FROM`)
-- D'ajouter un comportement spécifique (`SYSTEM`)
+### Exécution du script
 
-Exemple :
-
-```Dockerfile
-FROM deepseek-coder:6.7b
-SYSTEM "You are a vulnerability detection assistant. Analyze code for security issues."
+```bash
+python3 vulnguard.py
 ```
+
+### Fonctionnement pas à pas
+
+1. **Sélection du modèle** : Le script liste automatiquement les modèles Ollama disponibles sur votre système.
+   - Par défaut, il utilise `Michel` s'il est disponible
+   - Vous pouvez sélectionner un autre modèle par son numéro ou son nom
+
+2. **Saisie des informations** :
+   - Description de la CVE (Common Vulnerabilities and Exposures)
+   - Emplacement du fichier concerné
+   - Code diff à analyser (terminé par une ligne contenant uniquement "END")
+
+3. **Analyse de la vulnérabilité** : Le script envoie ces informations au modèle Ollama sélectionné
+
+4. **Affichage des résultats** : L'analyse est présentée sous forme de rapport détaillé
 
 ---
 
@@ -103,7 +104,18 @@ FROM mistral:7b
 
 ## 📴 Fonctionnement hors ligne
 
-Une fois le modèle téléchargé, **aucune connexion internet n’est requise**. Le LLM tourne entièrement en **local**, sans cloud.
+Une fois le modèle téléchargé, **aucune connexion internet n'est requise**. Le LLM tourne entièrement en **local**, sans cloud.
+
+---
+
+## 🔧 Configuration avancée
+
+### Template de prompt personnalisé
+
+Par défaut, le script utilise un template situé dans `./llm/user-prompt.txt`. Vous pouvez créer votre propre template avec les variables suivantes :
+- `{{CVE_DESCRIPTION}}` : Description de la CVE
+- `{{File_Location}}` : Emplacement du fichier
+- `{{DIFF_HUNK}}` : Code diff à analyser
 
 ---
 
@@ -112,11 +124,12 @@ Une fois le modèle téléchargé, **aucune connexion internet n’est requise**
 | Description                      | Commande                                         |
 |----------------------------------|--------------------------------------------------|
 | Installer Ollama                 | `curl -fsSL https://ollama.com/install.sh \| sh` |
-| Télécharger un modèle            | `ollama run deepseek-coder:6.7b`                 |
+| Télécharger un modèle            | `ollama pull <model_name>`                       |
 | Quitter le prompt                | `/bye`                                           |
 | Créer un modèle personnalisé     | `ollama create Michel -f ./Modelfile`            |
 | Lancer le modèle personnalisé    | `ollama run Michel`                              |
 | Voir les modèles installés       | `ollama list`                                    |
+| Lancer VulnGuard                 | `python3 vulnguard.py`                           |
 
 ---
 
