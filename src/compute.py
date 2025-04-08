@@ -177,7 +177,15 @@ async def compute(cve: Cve, global_changes: GlobalChanges, model_name):
     @param model_name The name of the LLM model to query.
     """
     logger.logger.info("Starting computation...")
+
+    # Clear output directory
+    try:
+        os.makedirs(os.path.dirname(output_directory), exist_ok=False)
+    except OSError as e:
+        os.remove(f"{output_directory}*.txt")
+
     f, d = 0, 0
+    begin_computation = time.time()
     for file in global_changes.files:
         f += 1
         for diff in file.diffs:
@@ -199,5 +207,5 @@ async def compute(cve: Cve, global_changes: GlobalChanges, model_name):
                 logger.logger.info(f"Vulnerable code found in file: {file.name}, diff: {d} !")
                 cve.code.append((f, d))
                 __save_llm_output(llm_output, f, d)
-
-    logger.logger.info("Finished computation.")
+    end_computation = time.time()
+    logger.logger.info(f"Finished computation. Took {end_computation - begin_computation} seconds.")
