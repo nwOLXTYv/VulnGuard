@@ -55,10 +55,8 @@ def __format_prompt(cve_description, file_location, diff_hunk, template=user_pro
             user_prompt = file.read()
 
         user_prompt = user_prompt.replace("{{CVE_DESCRIPTION}}", cve_description)
-        user_prompt = user_prompt.replace("{{File_Location}}", file_location)
+        user_prompt = user_prompt.replace("{{FILE_LOCATION}}", file_location)
         user_prompt = user_prompt.replace("{{DIFF_HUNK}}", diff_hunk)
-        # logger.logger.info("Llm prompt: {}".format(user_prompt))
-
         return user_prompt
 
     except FileNotFoundError:
@@ -150,6 +148,21 @@ def __save_llm_output(llm_output, file_name, diff_value):
         f.write(llm_output)
 
 
+def __print_output(cve: Cve):
+    """
+    @brief Prints the locations of the LLM output files for a given CVE.
+
+    This function iterates over the code entries in the CVE object and prints
+    the file paths where the LLM output is stored. It uses a predefined output
+    directory to construct the file paths.
+
+    @param cve The CVE object containing the code entries with LLM output.
+    """
+    print("LLM output can be found in:")
+    for (f, d) in cve.code:
+        print(f"- {output_directory}{f}_{d}.txt")
+
+
 async def compute(cve: Cve, global_changes: GlobalChanges, model_name):
     """
     @brief Computes the vulnerability status of diff hunks in a set of files.
@@ -188,4 +201,3 @@ async def compute(cve: Cve, global_changes: GlobalChanges, model_name):
                 __save_llm_output(llm_output, f, d)
 
     logger.logger.info("Finished computation.")
-    print(f"Llm output can be found in {output_directory}.")
