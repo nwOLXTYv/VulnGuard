@@ -194,6 +194,7 @@ def parse(diff_filename):
     @return A GlobalChanges object containing the parsed diff data.
     """
     logger = PrettyLogger("GlobalChanges")
+    logger.logger.info("Started parsing ...")
     try:
         with open(diff_filename, 'r') as file:
             diff_content = file.read()

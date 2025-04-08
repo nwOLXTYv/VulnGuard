@@ -29,7 +29,7 @@ class Cve:
         self.db_path = path
         self.last_update = ""
         self.description = ""
-        self.code = ""
+        self.code = []  # Contains a tuple : (file index, diff index)
         self.__get_data()
 
     def __get_data(self):

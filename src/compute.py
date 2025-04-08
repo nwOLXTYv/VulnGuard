@@ -1,3 +1,4 @@
+import os
 import re
 import ollama
 from enum import Enum
@@ -7,6 +8,7 @@ from tools.logger import PrettyLogger
 
 # User prompt template
 user_prompt_template = "./docs/user-prompt.txt"
+output_directory = "./output/"
 
 
 class LlmOutput(Enum):
@@ -112,6 +114,25 @@ def __check_llm_output(llm_output):
     return LlmOutput.VULNERABLE
 
 
+def __save_llm_output(llm_output, file_name, diff_value):
+    """
+    @brief Saves the LLM output to a file.
+
+    This function creates the necessary directories and saves the LLM output to a file.
+    The file is named based on the provided file name and diff value, and is stored in
+    a predefined output directory.
+
+    @param llm_output The output from the LLM to be saved.
+    @param file_name The name of the file associated with the LLM output.
+    @param diff_value The diff value associated with the LLM output.
+    """
+    os.makedirs(os.path.dirname(output_directory), exist_ok=True)
+    filename = os.path.join(output_directory, f"{file_name}_{diff_value}.txt")
+
+    with open(filename, "w") as f:
+        f.write(llm_output)
+
+
 def compute(cve: Cve, global_changes: GlobalChanges, model_name):
     """
     @brief Computes the vulnerability status of diff hunks in a set of files.
@@ -126,6 +147,7 @@ def compute(cve: Cve, global_changes: GlobalChanges, model_name):
     @param model_name The name of the LLM model to query.
     """
     logger = PrettyLogger("Compute")
+    logger.logger.info("Starting computation...")
     f, d = 0, 0
     for file in global_changes.files:
         f += 1
@@ -143,4 +165,8 @@ def compute(cve: Cve, global_changes: GlobalChanges, model_name):
                 continue
             if llm_result == LlmOutput.VULNERABLE:
                 logger.logger.info(f"Vulnerable code found in file: {file.name}, diff: {d} !")
-                cve.code.append(file.name + "\n" + diff.value + "\n")
+                cve.code.append((f, d))
+                __save_llm_output(llm_output, file.name, diff.value)
+
+    logger.logger.info("Finished computation.")
+    print(f"Llm output can be found in {output_directory}.")

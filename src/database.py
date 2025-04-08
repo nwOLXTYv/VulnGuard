@@ -8,7 +8,7 @@ import time
 
 from fnmatch import fnmatch
 from tools.logger import PrettyLogger
-from os import (system, chdir, walk, path)
+from os import (system, walk, path)
 from datetime import (datetime, timedelta)
 
 
@@ -31,6 +31,19 @@ class Database:
         self.last_update = None
         self.__update()
 
+    def __update(self):
+        """
+        Update the cvelistV5 database by pulling the latest changes from the repository.
+
+        This method changes the directory to the database path and performs a git pull to update the database.
+        """
+        self.logger.logger.info("Database update ...")
+        start = time.process_time()
+        system("git pull > /dev/null")
+        self.last_update = datetime.now()
+        end = time.process_time()
+        self.logger.logger.info("Database update took %f seconds.", (end - start))
+
     def __check_cve_regexp(self, cve):
         """
         Check if the CVE name matches the expected pattern.
@@ -47,19 +60,6 @@ class Database:
         else:
             self.logger.logger.error("CVE name doesn't match regexp.")
         return match is not None
-
-    def __update(self):
-        """
-        Update the cvelistV5 database by pulling the latest changes from the repository.
-
-        This method changes the directory to the database path and performs a git pull to update the database.
-        """
-        self.logger.logger.info("Database update ...")
-        start = time.process_time()
-        system("git pull > /dev/null")
-        self.last_update = datetime.now()
-        end = time.process_time()
-        self.logger.logger.info("Database update took %f seconds.", (end - start))
 
     def search(self, cve):
         """
