@@ -66,7 +66,7 @@ def list_ollama_models():
 
 
 
-def format_prompt(cve_description, file_location, diff_hunk, template_path="../llm/user-prompt.txt"):
+def format_prompt(cve_description, file_location, diff_hunk, template_path="./docs/user-prompt.txt"):
     """
     Format the prompt using the template and input parameters.
 
@@ -153,7 +153,7 @@ def vulnguard():
         print(f"{idx}. {model_name}")
 
     # Select model (default to vulnerability_detector if available)
-    default_model = "vulnerability_detector"
+    default_model = "Michel:latest"
     selected_model = default_model if default_model in models_dict else next(iter(models_dict.keys()), None)
 
     if not selected_model:

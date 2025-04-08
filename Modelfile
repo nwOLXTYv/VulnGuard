@@ -1,3 +1,4 @@
+#Change the model name to the one you want to use
 FROM deepseek-coder:6.7b
 # Model parameters for fine-tuning
 PARAMETER num_ctx 50000

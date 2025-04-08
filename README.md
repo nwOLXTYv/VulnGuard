@@ -112,7 +112,7 @@ Une fois le modèle téléchargé, **aucune connexion internet n'est requise**. 
 
 ### Template de prompt personnalisé
 
-Par défaut, le script utilise un template situé dans `./llm/user-prompt.txt`. Vous pouvez créer votre propre template avec les variables suivantes :
+Par défaut, le script utilise un template situé dans `./docs/user-prompt.txt`. Vous pouvez créer votre propre template avec les variables suivantes :
 - `{{CVE_DESCRIPTION}}` : Description de la CVE
 - `{{File_Location}}` : Emplacement du fichier
 - `{{DIFF_HUNK}}` : Code diff à analyser
