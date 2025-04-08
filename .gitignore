@@ -8,6 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+output/
 build/
 develop-eggs/
 dist/
@@ -178,3 +179,5 @@ cvelistV5/
 
 # MacOS specific files
 *.DS_Store
+
+docs/CVE-*

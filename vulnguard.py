@@ -11,7 +11,9 @@ from src.compute import compute
 from src.database import Database
 from src.parsing import parse
 from tools.logger import PrettyLogger
+import asyncio
 
+logger = PrettyLogger("Vulnguard")
 
 def list_ollama_models():
     """
@@ -22,7 +24,7 @@ def list_ollama_models():
 
     @return An OrderedDict mapping model names to their metadata.
     """
-    logger = PrettyLogger("ModelLister")
+
     logger.logger.info("Listing available Ollama models...")
 
     try:
@@ -83,7 +85,6 @@ def choose_llm_model():
 
     @return The name of the selected LLM model.
     """
-    logger = PrettyLogger("ModelChooser")
 
     try:
         models_dict = list_ollama_models()
@@ -129,7 +130,7 @@ def vulnguard():
     This function initializes the tool, allows the user to select an LLM model,
     and repeatedly prompts for CVE IDs and diff file locations to analyze vulnerabilities.
     """
-    logger = PrettyLogger("Vulnguard")
+
     logger.logger.info("Starting Vulnguard vulnerability analysis tool")
     db = Database()
 
@@ -145,7 +146,7 @@ def vulnguard():
             cve = Cve(cve_id, cve_path)
             changes = parse(diff_location)
 
-            compute(cve, changes, selected_model)
+            asyncio.run(compute(cve, changes, selected_model))
 
             continue_choice = input("\nAnalyze another vulnerability? (y/n): ").lower()
             if continue_choice != 'y':

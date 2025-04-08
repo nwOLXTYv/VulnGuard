@@ -39,7 +39,7 @@ class Database:
         """
         self.logger.logger.info("Database update ...")
         start = time.process_time()
-        system("git pull > /dev/null")
+        #system("git pull > /dev/null")
         self.last_update = datetime.now()
         end = time.process_time()
         self.logger.logger.info("Database update took %f seconds.", (end - start))
@@ -82,5 +82,5 @@ class Database:
                     cve_path = path.join(root, name)
                     self.logger.logger.info("Found %s at %s", cve, cve_path)
                     return cve_path
-        self.logger.logger.error("Could not find any %s.", cve)
+        self.logger.logger.error("Could not find any bitches %s.", cve)
         exit(1)

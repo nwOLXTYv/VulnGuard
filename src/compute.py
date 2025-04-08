@@ -1,15 +1,19 @@
 import os
 import re
+import time
+
 import ollama
 from enum import Enum
 from src.cve import Cve
 from src.parsing import GlobalChanges
 from tools.logger import PrettyLogger
+import asyncio
 
 # User prompt template
 user_prompt_template = "./docs/user-prompt.txt"
 output_directory = "./output/"
 
+logger = PrettyLogger("Compute")
 
 class LlmOutput(Enum):
     """
@@ -39,7 +43,7 @@ def __format_prompt(cve_description, file_location, diff_hunk, template=user_pro
 
     @return A formatted prompt string.
     """
-    logger = PrettyLogger("PromptFormatter")
+
 
     try:
         with open(template, 'r') as file:
@@ -48,7 +52,7 @@ def __format_prompt(cve_description, file_location, diff_hunk, template=user_pro
         user_prompt = user_prompt.replace("{{CVE_DESCRIPTION}}", cve_description)
         user_prompt = user_prompt.replace("{{File_Location}}", file_location)
         user_prompt = user_prompt.replace("{{DIFF_HUNK}}", diff_hunk)
-        logger.logger.info("Llm prompt: {}".format(user_prompt))
+        # logger.logger.info("Llm prompt: {}".format(user_prompt))
 
         return user_prompt
 
@@ -66,7 +70,7 @@ def __format_prompt(cve_description, file_location, diff_hunk, template=user_pro
         return prompt
 
 
-def __call_to_ollama(model_name, prompt):
+async def __call_to_ollama(model_name, prompt):
     """
     @brief Sends a request to the Ollama model and retrieves the response.
 
@@ -78,7 +82,6 @@ def __call_to_ollama(model_name, prompt):
 
     @return The model's response or None if an error occurred.
     """
-    logger = PrettyLogger("CallToOllama")
 
     try:
         logger.logger.info(f"Sending request to model: {model_name}")
@@ -106,10 +109,15 @@ def __check_llm_output(llm_output):
     """
     if not llm_output:
         return LlmOutput.ERROR
-
+    if re.search(r"/README.md", llm_output):
+        return LlmOutput.SAFE
     pattern = r"The provided diff hunk does not contain code matching the CVE description"
     match = re.search(pattern, llm_output)
     if match:
+        return LlmOutput.SAFE
+    pattern2 = r"The provided diff hunk does not directly contain the vulnerable code for this vulnerability"
+    match2 = re.search(pattern2, llm_output)
+    if match2:
         return LlmOutput.SAFE
     return LlmOutput.VULNERABLE
 
@@ -133,7 +141,7 @@ def __save_llm_output(llm_output, file_name, diff_value):
         f.write(llm_output)
 
 
-def compute(cve: Cve, global_changes: GlobalChanges, model_name):
+async def compute(cve: Cve, global_changes: GlobalChanges, model_name):
     """
     @brief Computes the vulnerability status of diff hunks in a set of files.
 
@@ -146,15 +154,14 @@ def compute(cve: Cve, global_changes: GlobalChanges, model_name):
     @param global_changes The GlobalChanges object containing file and diff changes.
     @param model_name The name of the LLM model to query.
     """
-    logger = PrettyLogger("Compute")
     logger.logger.info("Starting computation...")
     f, d = 0, 0
     for file in global_changes.files:
         f += 1
-        for diff in file.diff_hunks:
+        for diff in file.diffs:
             d += 1
             prompt = __format_prompt(cve.description, file.name, diff.value)
-            llm_output = __call_to_ollama(model_name, prompt)
+            llm_output = await __call_to_ollama(model_name, prompt)
             llm_result = __check_llm_output(llm_output)
 
             if llm_result == LlmOutput.ERROR:
@@ -166,7 +173,7 @@ def compute(cve: Cve, global_changes: GlobalChanges, model_name):
             if llm_result == LlmOutput.VULNERABLE:
                 logger.logger.info(f"Vulnerable code found in file: {file.name}, diff: {d} !")
                 cve.code.append((f, d))
-                __save_llm_output(llm_output, file.name, diff.value)
+                __save_llm_output(llm_output, f, d)
 
     logger.logger.info("Finished computation.")
     print(f"Llm output can be found in {output_directory}.")
