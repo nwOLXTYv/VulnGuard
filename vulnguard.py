@@ -5,13 +5,13 @@
 """
 
 import ollama  # Ollama Python client
+import asyncio
 from collections import OrderedDict
 from src.cve import Cve
 from src.compute import compute
 from src.database import Database
 from src.parsing import parse
 from tools.logger import PrettyLogger
-import asyncio
 
 logger = PrettyLogger("Vulnguard")
 
@@ -132,10 +132,9 @@ def vulnguard():
     """
 
     logger.logger.info("Starting Vulnguard vulnerability analysis tool")
-    db = Database()
 
+    db = Database()
     selected_model = choose_llm_model()
-    logger.logger.info(f"Selected model: {selected_model}")
 
     try:
         while True:

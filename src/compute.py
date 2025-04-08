@@ -3,17 +3,18 @@ import re
 import time
 
 import ollama
+
 from enum import Enum
 from src.cve import Cve
 from src.parsing import GlobalChanges
 from tools.logger import PrettyLogger
-import asyncio
 
 # User prompt template
 user_prompt_template = "./docs/user-prompt.txt"
 output_directory = "./output/"
 
 logger = PrettyLogger("Compute")
+
 
 class LlmOutput(Enum):
     """
@@ -109,16 +110,20 @@ def __check_llm_output(llm_output):
     """
     if not llm_output:
         return LlmOutput.ERROR
+
     if re.search(r"/README.md", llm_output):
         return LlmOutput.SAFE
+
     pattern = r"The provided diff hunk does not contain code matching the CVE description"
     match = re.search(pattern, llm_output)
     if match:
         return LlmOutput.SAFE
+
     pattern2 = r"The provided diff hunk does not directly contain the vulnerable code for this vulnerability"
     match2 = re.search(pattern2, llm_output)
     if match2:
         return LlmOutput.SAFE
+
     return LlmOutput.VULNERABLE
 
 
@@ -161,7 +166,10 @@ async def compute(cve: Cve, global_changes: GlobalChanges, model_name):
         for diff in file.diffs:
             d += 1
             prompt = __format_prompt(cve.description, file.name, diff.value)
+            begin = time.time()
             llm_output = await __call_to_ollama(model_name, prompt)
+            end = time.time()
+            logger.logger.info(f"Computation took {end - begin} seconds.")
             llm_result = __check_llm_output(llm_output)
 
             if llm_result == LlmOutput.ERROR:
