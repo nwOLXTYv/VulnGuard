@@ -18,6 +18,6 @@ Vulnerability Analysis:
 
 Here is the CVE Description : {{CVE_DESCRIPTION}}
 
-Here is the File location : {{File_Location}}
+Here is the File location : {{FILE_LOCATION}}
 
 Here is the Diff hunk : {{DIFF_HUNK}}

@@ -49,7 +49,7 @@ class Cve:
             self.logger.logger.error("Failed to load CVE data from '{}'".format(self.db_path))
             self.logger.logger.error(e)
             exit(1)
-        self.pretty_print()
+        # self.pretty_print()
 
     def pretty_print(self):
         """
