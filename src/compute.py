@@ -1,6 +1,5 @@
 import re
 import ollama
-
 from enum import Enum
 from src.cve import Cve
 from src.parsing import GlobalChanges
@@ -11,15 +10,35 @@ user_prompt_template = "./docs/user-prompt.txt"
 
 
 class LlmOutput(Enum):
-    VULNERABLE = 1
-    SAFE = 2
-    ERROR = 3
+    """
+    @enum LlmOutput
+    @brief Enumeration representing possible outputs from the LLM analysis.
+
+    This enumeration defines the possible outcomes of analyzing a diff hunk
+    with respect to a CVE description.
+    """
+    VULNERABLE = 1  # The diff hunk is vulnerable.
+    SAFE = 2        # The diff hunk is safe.
+    ERROR = 3       # An error occurred during analysis.
 
 
 def __format_prompt(cve_description, file_location, diff_hunk, template=user_prompt_template):
+    """
+    @brief Formats a prompt for the LLM using a template.
+
+    This function reads a template file and replaces placeholders with actual data
+    related to the CVE description, file location, and diff hunk. It logs the formatted
+    prompt and handles file not found errors by using a default prompt format.
+
+    @param cve_description The description of the CVE.
+    @param file_location The location of the file being analyzed.
+    @param diff_hunk The diff hunk to be analyzed.
+    @param template The path to the prompt template file.
+
+    @return A formatted prompt string.
+    """
     logger = PrettyLogger("PromptFormatter")
 
-    # Replace placeholders with actual data
     try:
         with open(template, 'r') as file:
             user_prompt = file.read()
@@ -35,18 +54,28 @@ def __format_prompt(cve_description, file_location, diff_hunk, template=user_pro
         logger.logger.error(f"Template file not found: {template}")
         logger.logger.info("Using default prompt format...")
 
-        # Fallback to a simple built-in template
         prompt = f"""
-    You are a specialized code security assistant. Your task is to analyze the provided code diff hunk in the context of the CVE description given below.
+        You are a specialized code security assistant. Your task is to analyze the provided code diff hunk in the context of the CVE description given below.
 
-    Here is the CVE Description: {cve_description}
-    Here is the File location: {file_location}
-    Here is the Diff hunk: {diff_hunk}
-    """
+        Here is the CVE Description: {cve_description}
+        Here is the File location: {file_location}
+        Here is the Diff hunk: {diff_hunk}
+        """
         return prompt
 
 
 def __call_to_ollama(model_name, prompt):
+    """
+    @brief Sends a request to the Ollama model and retrieves the response.
+
+    This function logs the request details and handles any exceptions that occur
+    during the API call. It returns the model's response or an error message.
+
+    @param model_name The name of the model to query.
+    @param prompt The prompt to send to the model.
+
+    @return The model's response or None if an error occurred.
+    """
     logger = PrettyLogger("CallToOllama")
 
     try:
@@ -62,6 +91,17 @@ def __call_to_ollama(model_name, prompt):
 
 
 def __check_llm_output(llm_output):
+    """
+    @brief Checks the LLM output to determine if the diff hunk is vulnerable.
+
+    This function analyzes the LLM's response to determine if the diff hunk is
+    vulnerable, safe, or if an error occurred. It uses a regex pattern to identify
+    safe responses.
+
+    @param llm_output The output from the LLM.
+
+    @return An LlmOutput enumeration value indicating the result.
+    """
     if not llm_output:
         return LlmOutput.ERROR
 
@@ -73,6 +113,18 @@ def __check_llm_output(llm_output):
 
 
 def compute(cve: Cve, global_changes: GlobalChanges, model_name):
+    """
+    @brief Computes the vulnerability status of diff hunks in a set of files.
+
+    This function iterates over the files and diff hunks in the GlobalChanges object,
+    formats a prompt for each diff hunk, queries the LLM model, and checks the output
+    to determine if the diff hunk is vulnerable. It logs the results and updates the
+    CVE object with vulnerable code.
+
+    @param cve The CVE object containing the description and code.
+    @param global_changes The GlobalChanges object containing file and diff changes.
+    @param model_name The name of the LLM model to query.
+    """
     logger = PrettyLogger("Compute")
     f, d = 0, 0
     for file in global_changes.files:
