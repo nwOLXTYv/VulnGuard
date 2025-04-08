@@ -123,7 +123,7 @@ def choose_llm_model():
     return selected_model
 
 
-def vulnguard():
+def main():
     """
     @brief Main function that runs the VulnGuard vulnerability analysis tool.
 
@@ -160,4 +160,4 @@ def vulnguard():
 
 
 if __name__ == '__main__':
-    vulnguard()
+    main()
