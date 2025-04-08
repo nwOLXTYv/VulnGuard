@@ -1,6 +1,5 @@
-#!/usr/bin/env python3
 """
-@file vulnguard.py
+@file Vulnguard.py
 @brief A tool for analyzing code vulnerabilities using Ollama models.
 """
 
@@ -14,6 +13,7 @@ from src.parsing import parse
 from tools.logger import PrettyLogger
 
 logger = PrettyLogger("Vulnguard")
+
 
 def list_ollama_models():
     """

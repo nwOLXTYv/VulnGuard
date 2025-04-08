@@ -1,3 +1,8 @@
+"""
+@file Compute.py
+@brief Contains all functions and stuff related to ollama usage
+"""
+
 import os
 import re
 import time
@@ -44,7 +49,6 @@ def __format_prompt(cve_description, file_location, diff_hunk, template=user_pro
 
     @return A formatted prompt string.
     """
-
 
     try:
         with open(template, 'r') as file:
