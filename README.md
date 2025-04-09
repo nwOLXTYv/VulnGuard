@@ -48,7 +48,7 @@ ollama create Michel -f ./Modelfile
 ### 4. Installer les dépendances
 
 ```bash
-pip install -r requirements.txt
+chmod +x install.sh && ./install.sh
 ```
 
 ---
