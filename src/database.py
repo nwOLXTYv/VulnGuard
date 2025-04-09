@@ -39,7 +39,7 @@ class Database:
         """
         self.logger.logger.info("Database update ...")
         start = time.process_time()
-        #system("git pull > /dev/null")
+        system("git pull > /dev/null")
         self.last_update = datetime.now()
         end = time.process_time()
         self.logger.logger.info("Database update took %f seconds.", (end - start))
