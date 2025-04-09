@@ -196,7 +196,7 @@ def parse(diff_filename):
     logger = PrettyLogger("GlobalChanges")
     logger.logger.info("Started parsing ...")
     try:
-        with open(diff_filename, 'r') as file:
+        with open(diff_filename, 'r', encoding="utf-8") as file:
             diff_content = file.read()
 
         global_changes = GlobalChanges()
