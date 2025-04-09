@@ -65,21 +65,22 @@ python3 vulnguard.py
 
 ### Fonctionnement pas à pas
 
-1. **Select an LLM Model:**
+1. **Sélectionnez un modèle LLM :**
 
-- VulnGuard will list the available Ollama models.
-- Choose a model by entering the corresponding number or name. If you press Enter without making a selection, VulnGuard will use the default model (Michel:latest if available).
+VulnGuard liste les modèles Ollama disponibles.
+Choisissez un modèle en entrant le numéro ou le nom correspondant. Si vous appuyez sur Entrée sans faire de sélection, VulnGuard utilisera le modèle par défaut (Michel:latest si disponible).
 
-2. **Analyze Vulnerabilities:**
+2. **Analyser les vulnérabilités :**
 
-- Enter the CVE ID you want to analyze when prompted.
-- Provide the path to the diff file location that corresponds to the CVE.
-- VulnGuard will process the diff file and analyze it using the selected LLM model.
+Entrez l'ID CVE que vous souhaitez analyser.
+Fournissez le chemin vers l'emplacement du fichier diff correspondant à la CVE.
+VulnGuard traitera le fichier diff et l'analysera à l'aide du modèle LLM sélectionné.
 
-3. **Review Results:**
+3. **Examiner les résultats :**
 
-- After the analysis, VulnGuard will output the results, indicating whether the code is vulnerable or safe.
-- You can choose to analyze another vulnerability or exit the tool.
+Après l'analyse, VulnGuard sauvegardera les résultats dans ./output/, indiquant si le code est vulnérable ou sûr.
+Vous pouvez choisir d'analyser une autre vulnérabilité ou quitter l'outil.
+
 
 ---
 
