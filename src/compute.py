@@ -51,7 +51,7 @@ def __format_prompt(cve_description, file_location, diff_hunk, template=user_pro
     """
 
     try:
-        with open(template, 'r') as file:
+        with open(template, 'r', encoding="utf-8") as file:
             user_prompt = file.read()
 
         user_prompt = user_prompt.replace("{{CVE_DESCRIPTION}}", cve_description)
@@ -144,7 +144,7 @@ def __save_llm_output(llm_output, file_name, diff_value):
     os.makedirs(os.path.dirname(output_directory), exist_ok=True)
     filename = os.path.join(output_directory, f"{file_name}_{diff_value}.txt")
 
-    with open(filename, "w") as f:
+    with open(filename, "w", encoding="utf-8") as f:
         f.write(llm_output)
 
 
@@ -177,12 +177,6 @@ async def compute(cve: Cve, global_changes: GlobalChanges, model_name):
     @param model_name The name of the LLM model to query.
     """
     logger.logger.info("Starting computation...")
-
-    # Clear output directory
-    try:
-        os.makedirs(os.path.dirname(output_directory), exist_ok=False)
-    except OSError as e:
-        os.remove(f"{output_directory}*.txt")
 
     f, d = 0, 0
     begin_computation = time.time()
