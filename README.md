@@ -48,7 +48,7 @@ ollama create Michel -f ./Modelfile
 ### 4. Installer les dépendances
 
 ```bash
-pip install -r requirements.txt
+chmod +x install.sh && ./install.sh
 ```
 
 ---
@@ -65,18 +65,22 @@ python3 vulnguard.py
 
 ### Fonctionnement pas à pas
 
-1. **Sélection du modèle** : Le script liste automatiquement les modèles Ollama disponibles sur votre système.
-   - Par défaut, il utilise `Michel` s'il est disponible
-   - Vous pouvez sélectionner un autre modèle par son numéro ou son nom
+1. **Sélectionnez un modèle LLM :**
 
-2. **Saisie des informations** :
-   - Description de la CVE (Common Vulnerabilities and Exposures)
-   - Emplacement du fichier concerné
-   - Code diff à analyser (terminé par une ligne contenant uniquement "END")
+VulnGuard liste les modèles Ollama disponibles.
+Choisissez un modèle en entrant le numéro ou le nom correspondant. Si vous appuyez sur Entrée sans faire de sélection, VulnGuard utilisera le modèle par défaut (Michel:latest si disponible).
 
-3. **Analyse de la vulnérabilité** : Le script envoie ces informations au modèle Ollama sélectionné
+2. **Analyser les vulnérabilités :**
 
-4. **Affichage des résultats** : L'analyse est présentée sous forme de rapport détaillé
+Entrez l'ID CVE que vous souhaitez analyser.
+Fournissez le chemin vers l'emplacement du fichier diff correspondant à la CVE.
+VulnGuard traitera le fichier diff et l'analysera à l'aide du modèle LLM sélectionné.
+
+3. **Examiner les résultats :**
+
+Après l'analyse, VulnGuard sauvegardera les résultats dans ./output/, indiquant si le code est vulnérable ou sûr.
+Vous pouvez choisir d'analyser une autre vulnérabilité ou quitter l'outil.
+
 
 ---
 
@@ -114,7 +118,7 @@ Une fois le modèle téléchargé, **aucune connexion internet n'est requise**. 
 
 Par défaut, le script utilise un template situé dans `./docs/user-prompt.txt`. Vous pouvez créer votre propre template avec les variables suivantes :
 - `{{CVE_DESCRIPTION}}` : Description de la CVE
-- `{{File_Location}}` : Emplacement du fichier
+- `{{FILE_LOCATION}}` : Emplacement du fichier
 - `{{DIFF_HUNK}}` : Code diff à analyser
 
 ---
