@@ -65,18 +65,21 @@ python3 vulnguard.py
 
 ### Fonctionnement pas à pas
 
-1. **Sélection du modèle** : Le script liste automatiquement les modèles Ollama disponibles sur votre système.
-   - Par défaut, il utilise `Michel` s'il est disponible
-   - Vous pouvez sélectionner un autre modèle par son numéro ou son nom
+1. **Select an LLM Model:**
 
-2. **Saisie des informations** :
-   - Description de la CVE (Common Vulnerabilities and Exposures)
-   - Emplacement du fichier concerné
-   - Code diff à analyser (terminé par une ligne contenant uniquement "END")
+- VulnGuard will list the available Ollama models.
+- Choose a model by entering the corresponding number or name. If you press Enter without making a selection, VulnGuard will use the default model (Michel:latest if available).
 
-3. **Analyse de la vulnérabilité** : Le script envoie ces informations au modèle Ollama sélectionné
+2. **Analyze Vulnerabilities:**
 
-4. **Affichage des résultats** : L'analyse est présentée sous forme de rapport détaillé
+- Enter the CVE ID you want to analyze when prompted.
+- Provide the path to the diff file location that corresponds to the CVE.
+- VulnGuard will process the diff file and analyze it using the selected LLM model.
+
+3. **Review Results:**
+
+- After the analysis, VulnGuard will output the results, indicating whether the code is vulnerable or safe.
+- You can choose to analyze another vulnerability or exit the tool.
 
 ---
 
@@ -114,7 +117,7 @@ Une fois le modèle téléchargé, **aucune connexion internet n'est requise**. 
 
 Par défaut, le script utilise un template situé dans `./docs/user-prompt.txt`. Vous pouvez créer votre propre template avec les variables suivantes :
 - `{{CVE_DESCRIPTION}}` : Description de la CVE
-- `{{File_Location}}` : Emplacement du fichier
+- `{{FILE_LOCATION}}` : Emplacement du fichier
 - `{{DIFF_HUNK}}` : Code diff à analyser
 
 ---
