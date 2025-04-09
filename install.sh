@@ -58,7 +58,7 @@ print_success "Project's requirements installed successfully."
 # Step 3: Clone the cvelistV5 repository
 print_info "Cloning the official cve.org GitHub repository..."
   # Attempt to clone the repository
-git clone https://github.com/CVEProject/cvelistV5.git || { print_warning "Failed to clone the repository. Please check the repository URL and your network connection.\n git clone https://github.com/CVEProject/cvelistV5.git"; exit 1; }
+git clone git@github.com:CVEProject/cvelistV5.git || { print_warning "Failed to clone the repository. Please check the repository URL and your network connection.\n git clone https://github.com/CVEProject/cvelistV5.git"; exit 1; }
   # Print step 3 success
 print_success "Repository cloned successfully."
 print_success "Installation and setup complete!"
